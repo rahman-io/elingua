@@ -1,4 +1,4 @@
-/* Elingua: prototype interaktif (HTML + CSS + JavaScript murni, tanpa library) */
+/* Mr. English: prototype interaktif (HTML + CSS + JavaScript murni, tanpa library) */
 (() => {
 'use strict';
 
@@ -46,6 +46,7 @@ const ICON = {
     practice: svg('<path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/>'),
     tutor: svg('<path d="M4 4h16a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H9l-5 4V5a1 1 0 0 1 1-1z"/>'),
     rank: svg('<path d="M4 21V11h4.5v10H4zm5.8 0V3h4.4v18H9.8zM15.5 21v-7H20v7h-4.5z"/>'),
+    hafalan: svg('<path d="M5 4a2 2 0 0 1 2-2h12v17H7a2 2 0 0 0-2 2V4zm4 3v2h6V7H9z"/><path d="M7 20h12v2H7a2 2 0 0 1 0-4z"/>'),
     profile: svg('<circle cx="12" cy="8" r="4.2"/><path d="M4 21c0-4.2 3.8-6.5 8-6.5s8 2.3 8 6.5H4z"/>')
   }
 };
@@ -212,6 +213,37 @@ const UNITS = [
   ] }
 ];
 
+
+/* ---- topik dasar: baca, arti, eja, tulis ---- */
+const ALPHA = [['A','ei','Apple','🍎'],['B','bi','Ball','⚽'],['C','si','Cat','🐱'],['D','di','Dog','🐶'],['E','i','Egg','🥚'],['F','ef','Fish','🐟'],['G','ji','Grape','🍇'],['H','eic','House','🏠'],['I','ai','Ice','🧊'],['J','jei','Juice','🧃'],['K','kei','Kite','🪁'],['L','el','Lion','🦁'],['M','em','Moon','🌙'],['N','en','Nose','👃'],['O','ou','Orange','🍊'],['P','pi','Pizza','🍕'],['Q','kyu','Queen','👑'],['R','ar','Rainbow','🌈'],['S','es','Sun','☀️'],['T','ti','Tree','🌳'],['U','yu','Umbrella','☂️'],['V','vi','Violin','🎻'],['W','dabel-yu','Water','💧'],['X','eks','Xylophone','🎶'],['Y','wai','Yacht','⛵'],['Z','zi','Zebra','🦓']]
+  .map(([en, rd, w, e]) => ({ en, rd, w, e, id: `dibaca "${rd}" · ${w}` }));
+const itm = s => s.split('|').map(x => { const [en, id, e] = x.split(','); return { en, id, e }; });
+const TOPICS = [
+  { id: 'abc', name: 'Alfabet', sub: 'A sampai Z', icon: '🔤', color: '#4F46E5', items: ALPHA, setorQ: 'Sebutkan huruf A sampai Z secara berurutan.' },
+  { id: 'hari', name: 'Nama hari', sub: 'Senin sampai Minggu', icon: '📅', color: '#0EA5A4', setorQ: 'Sebutkan nama hari dari Senin sampai Minggu dalam bahasa Inggris.',
+    items: itm('Monday,Senin,📅|Tuesday,Selasa,📅|Wednesday,Rabu,📅|Thursday,Kamis,📅|Friday,Jumat,📅|Saturday,Sabtu,📅|Sunday,Minggu,📅') },
+  { id: 'bulan', name: 'Nama bulan', sub: 'Januari sampai Desember', icon: '🗓️', color: '#8B5CF6', setorQ: 'Sebutkan nama dua belas bulan dalam bahasa Inggris, mulai dari Januari.',
+    items: itm('January,Januari,🗓️|February,Februari,🗓️|March,Maret,🗓️|April,April,🗓️|May,Mei,🗓️|June,Juni,🗓️|July,Juli,🗓️|August,Agustus,🗓️|September,September,🗓️|October,Oktober,🗓️|November,November,🗓️|December,Desember,🗓️') },
+  { id: 'angka', name: 'Angka', sub: 'Satu sampai sepuluh', icon: '🔢', color: '#F97316', pic: true, setorQ: 'Sebutkan angka satu sampai sepuluh dalam bahasa Inggris.',
+    items: itm('one,satu,1️⃣|two,dua,2️⃣|three,tiga,3️⃣|four,empat,4️⃣|five,lima,5️⃣|six,enam,6️⃣|seven,tujuh,7️⃣|eight,delapan,8️⃣|nine,sembilan,9️⃣|ten,sepuluh,🔟') },
+  { id: 'benda', name: 'Nama benda', sub: 'Benda sehari-hari', icon: '🪑', color: '#E5484D', pic: true, setorQ: 'Sebutkan nama benda yang kamu hafal: buku, pena, tas, kursi, pintu, jendela, cangkir, jam, telepon, kunci.',
+    items: itm('book,buku,📖|pen,pena,🖊️|bag,tas,🎒|chair,kursi,🪑|door,pintu,🚪|window,jendela,🪟|cup,cangkir,☕|clock,jam,⏰|phone,telepon,📱|key,kunci,🔑') },
+  { id: 'hewan', name: 'Nama hewan', sub: 'Hewan yang dikenal', icon: '🐾', color: '#17A34A', pic: true, setorQ: 'Sebutkan nama hewan yang kamu hafal: kucing, anjing, burung, ikan, sapi, ayam, bebek, kuda, kambing, kelinci.',
+    items: itm('cat,kucing,🐱|dog,anjing,🐶|bird,burung,🐦|fish,ikan,🐟|cow,sapi,🐄|chicken,ayam,🐔|duck,bebek,🦆|horse,kuda,🐴|goat,kambing,🐐|rabbit,kelinci,🐰') }
+];
+const TOPIC = id => TOPICS.find(t => t.id === id);
+const MS = ['b', 'a', 'e', 't'];
+const MS_INFO = { b: ['👀', 'Tau baca'], a: ['💡', 'Tau arti'], e: ['🔤', 'Tau eja'], t: ['✍️', 'Tau tulis'] };
+const QUOTES = [
+  'Sedikit setiap hari lebih kuat daripada banyak sekali-sekali.',
+  'Kata yang kamu ucapkan hari ini jadi kalimat yang kamu kuasai besok.',
+  'Tidak perlu sempurna. Yang penting setor.',
+  'Satu kata baru hari ini, satu pintu baru besok.',
+  'Streak-mu adalah bukti kamu tidak menyerah.',
+  'Ingat-ingat sebentar hari ini, lancar bicara nanti.',
+  'Hafalan yang diulang tidak akan hilang.'
+];
+
 const ALL_EX = UNITS.flatMap(u => u.lessons.flatMap(l => l.ex));
 const WRITE_WORDS = [{ word: 'thanks', hint: 'terima kasih' }, { word: 'hello', hint: 'halo' }, { word: 'friend', hint: 'teman' }];
 const SPEAK_LINES = [
@@ -261,12 +293,19 @@ const FIXES = [
 /* =====================================================================
    State (disimpan di perangkat, hanya untuk demo)
    ===================================================================== */
-const KEY = 'elingua-demo-v1';
+const KEY = 'mrenglish-demo-v1';
 const todayStr = () => ymd(new Date());
 function defaults() {
   const t = new Date();
+  const sd = n => ymd(addDays(t, -n));
   return { onboarded: false, goal: 'Karier dan kerja', level: 'Pemula', daily: 40, xp: 120, todayXp: 0, todayKey: todayStr(),
-    days: [ymd(addDays(t, -3)), ymd(addDays(t, -2)), ymd(addDays(t, -1))], done: {}, premium: false, review: [], plan: 'yearly', method: 'GoPay', clinic: 0 };
+    days: [sd(3), sd(2), sd(1)], done: {}, premium: false, review: [], plan: 'yearly', method: 'GoPay', clinic: 0,
+    mastery: { 'hari|Monday': { b: 1, a: 1 }, 'hari|Tuesday': { b: 1 } },
+    setor: [
+      { d: sd(3), topic: 'abc', got: 20, total: 26, text: 'a b c d e f g h i j k l m n o p q r s t', via: 'ketik' },
+      { d: sd(2), topic: 'angka', got: 8, total: 10, text: 'one two three four five six seven eight', via: 'suara' },
+      { d: sd(1), topic: 'hari', got: 7, total: 7, text: 'monday tuesday wednesday thursday friday saturday sunday', via: 'suara' }
+    ] };
 }
 function load() {
   try {
@@ -311,7 +350,7 @@ function openModal(html) { L2().innerHTML = html; L2().classList.add('on'); }
 function closeModal() { L2().classList.remove('on'); L2().innerHTML = ''; }
 
 let TAB = 'home';
-const NAV = [['home', 'Belajar'], ['practice', 'Latihan'], ['tutor', 'Tutor AI'], ['rank', 'Peringkat'], ['profile', 'Profil']];
+const NAV = [['home', 'Belajar'], ['practice', 'Latihan'], ['hafalan', 'Setor'], ['tutor', 'Tutor AI'], ['profile', 'Profil']];
 function renderNav() {
   $('#nav').innerHTML = NAV.map(([k, label]) =>
     `<button class="nav-btn${k === TAB ? ' on' : ''}" data-act="tab" data-tab="${k}" aria-label="${label}"${k === TAB ? ' aria-current="page"' : ''}>${ICON.nav[k]}<span>${label}</span></button>`).join('');
@@ -322,7 +361,7 @@ function goTab(t) { TAB = t; renderView(); renderNav(); }
    Tampilan tab
    ===================================================================== */
 const topStats = () => `<div class="chips"><span class="chip" title="Streak">🔥 <b>${streak()}</b></span><span class="chip" title="Total XP">⭐ <b>${S.xp}</b></span>${S.premium ? '<span class="chip prem">PRO</span>' : ''}</div>`;
-const topbar = title => `<header class="topbar"><div class="brand">${title ? `<h1>${title}</h1>` : `${mascot('happy', 30)}<b>Elingua</b>`}</div>${topStats()}</header>`;
+const topbar = title => `<header class="topbar"><div class="brand">${title ? `<h1>${title}</h1>` : `${mascot('happy', 30)}<b>Mr. English</b>`}</div>${topStats()}</header>`;
 
 function viewHome() {
   const pct = Math.min(100, Math.round(S.todayXp / S.daily * 100));
@@ -332,6 +371,7 @@ function viewHome() {
   h += `<section class="goal card"><div class="ring" style="--p:${pct}"><span>${pct}%</span></div>
     <div><h3>Target harian</h3><p>${S.todayXp} dari ${S.daily} XP hari ini</p><p class="muted small">Streak ${st} hari. Belajar hari ini untuk menjaganya.</p></div></section>
     <section class="hello">${mascot('happy', 64)}<div class="bubble">${first ? 'Halo! Mulai dari pelajaran pertama ya. Cuma beberapa menit.' : 'Mantap! Lanjutkan jalur belajarmu hari ini.'}</div></section>`;
+  h += homeExtras();
   UNITS.forEach(u => {
     const locked = u.premium && !S.premium;
     h += `<section class="unit" style="--c:${u.color}"><div class="unit-head"><div><small>${u.title}</small><h2>${u.name}</h2></div>${locked ? '<span class="tag-prem">Premium</span>' : `<span class="unit-prog">${doneCount(u)}/${u.lessons.length}</span>`}</div><div class="path">`;
@@ -343,6 +383,7 @@ function viewHome() {
     });
     h += '</div></section>';
   });
+  h += adBanner();
   if (!S.premium) h += `<button class="upsell" data-act="paywall"><span>⭐</span><div><b>Buka semua unit dengan Premium</b><small>Mulai Rp25.000 per bulan (paket tahunan)</small></div></button>`;
   return h + '<div class="spacer"></div>';
 }
@@ -369,10 +410,10 @@ const T = { msgs: [], mode: 'free', step: 0, init: false, typing: false };
 function viewTutor() {
   if (!T.init) {
     T.init = true;
-    T.msgs.push({ who: 'bot', text: 'Hi! Saya Kak Lani, tutor AI kamu. Mau latihan apa hari ini? Kamu juga bisa menulis atau merekam suara.' });
+    T.msgs.push({ who: 'bot', text: 'Hi! Saya Mr. English, tutor AI kamu. Mau latihan apa hari ini? Kamu juga bisa menulis atau merekam suara.' });
   }
   return `<div class="chat">
-    <header class="topbar chat-top"><div class="tutor-id">${mascot('happy', 40)}<div><b>Kak Lani</b><small>Tutor AI · mode demo</small></div></div><span class="tag tag-f2">Fase 2-3</span></header>
+    <header class="topbar chat-top"><div class="tutor-id">${mascot('happy', 40)}<div><b>Mr. English</b><small>Tutor AI · mode demo</small></div></div><span class="tag tag-f2">Fase 2-3</span></header>
     <div class="notice">Balasan di layar ini disimulasikan. Di aplikasi nyata, tutor terhubung ke model AI lewat server.</div>
     <div class="msgs" id="msgs">${T.msgs.map(msgHtml).join('')}</div>
     <div class="dock">
@@ -437,7 +478,7 @@ function tutorChip(k) {
   if (k === 'order') {
     T.mode = 'order'; T.step = 0;
     pushMsg('me', { text: 'Latihan memesan makanan' });
-    botSay([{ text: 'Seru! Aku jadi pelayan, kamu jadi pelanggan ya.' }, { text: 'Welcome to Warung Elingua! What would you like to order?' }]);
+    botSay([{ text: 'Seru! Aku jadi pelayan, kamu jadi pelanggan ya.' }, { text: 'Welcome to Warung Sedap! What would you like to order?' }]);
   } else if (k === 'fix') {
     T.mode = 'fix';
     pushMsg('me', { text: 'Koreksi kalimatku' });
@@ -521,6 +562,7 @@ function viewRank() {
   const list = RIVALS.concat([me]).sort((a, b) => b[1] - a[1]);
   const myPos = list.findIndex(r => r === me) + 1;
   let h = topbar('Peringkat');
+  h += '<button class="back-link" data-act="tab" data-tab="profile">‹ Kembali ke profil</button>';
   h += `<section class="league card"><div class="medal">🥉</div><div><h3>Liga Perunggu</h3><p>Kamu di peringkat <b>${myPos}</b> minggu ini. Lima besar naik ke Liga Perak.</p></div></section>
   <div class="tag tag-f2 inline-tag">Fase 2 · pratinjau</div>
   <ol class="rank">${list.map((r, i) => `<li class="${r === me ? 'me' : ''}"><span class="pos">${i === 0 ? '👑' : i + 1}</span><span class="av2" style="--h:${(r[0].charCodeAt(0) * 37) % 360}">${esc(r[0][0])}</span><b>${esc(r[0])}</b><span class="xp">${r[1]} XP</span></li>`).join('')}</ol>`;
@@ -544,11 +586,12 @@ function viewProfile() {
   <section class="card"><h3>7 hari terakhir</h3><div class="week">${days.map(d => `<div class="day${d.on ? ' on' : ''}${d.today ? ' today' : ''}"><span>${d.l}</span><i>${d.on ? '🔥' : ''}</i></div>`).join('')}</div></section>
   <h3 class="sec">Lencana</h3><section class="badges">${badges.map(b => `<div class="badge${b.on ? ' on' : ''}"><span>${b.on ? b.i : '🔒'}</span><b>${b.n}</b><small>${b.d}</small></div>`).join('')}</section>
   <section class="card plan"><div><h3>${S.premium ? 'Premium aktif' : 'Paket Gratis'}</h3><p class="muted">${S.premium ? `Paket ${S.plan === 'yearly' ? 'tahunan' : 'bulanan'}. Semua unit terbuka.` : 'Unit 1 gratis. Unit lain butuh Premium.'}</p></div>${S.premium ? '' : '<button class="btn btn-accent" data-act="paywall">Upgrade</button>'}</section>
+  <section class="card plan"><div><h3>Peringkat mingguan</h3><p class="muted">Bandingkan XP dengan pelajar lain.</p></div><button class="btn btn-ghost" data-act="rank">Lihat</button></section>
   <button class="btn btn-ghost btn-block" data-act="reset">Atur ulang demo</button><div class="spacer"></div>`;
   return h;
 }
 
-const VIEWS = { home: viewHome, practice: viewPractice, tutor: viewTutor, rank: viewRank, profile: viewProfile };
+const VIEWS = { home: viewHome, practice: viewPractice, hafalan: viewSetor, tutor: viewTutor, rank: viewRank, profile: viewProfile };
 function renderView() {
   const v = $('#view');
   v.className = 'view v-' + TAB;
@@ -597,6 +640,7 @@ function doCheck() {
   if (good) {
     LS.ok++; LS.combo++; LS.maxCombo = Math.max(LS.maxCombo, LS.combo);
     LS.xp += 10 + (LS.combo >= 3 ? 2 : 0);
+    if (ex.m) markMastery(ex.m);
     sfx.good();
   } else {
     LS.combo = 0; LS.wrong.push(ex);
@@ -624,8 +668,9 @@ const TYPES = {
   choose(ex, box) {
     box.innerHTML = `<h2 class="q">${esc(ex.q)}</h2>
       <div class="word-card"><button class="say" data-say="${esc(ex.say || ex.word)}" aria-label="Putar audio">${ICON.speaker}</button><span class="word">${esc(ex.word)}</span></div>
-      <div class="opts">${ex.opts.map((o, i) => `<button class="opt" data-i="${i}"><kbd>${i + 1}</kbd><span>${esc(o)}</span></button>`).join('')}</div>`;
+      <div class="opts${ex.big ? ' big' : ''}">${ex.opts.map((o, i) => `<button class="opt" data-i="${i}"><kbd>${i + 1}</kbd><span>${esc(o)}</span></button>`).join('')}</div>`;
     let sel = -1;
+    if (ex.auto) setTimeout(() => say(ex.say), 350);
     const choose = i => { sel = i; $$('.opt', box).forEach((x, k) => x.classList.toggle('sel', k === i)); ready(true); };
     box.addEventListener('click', e => { const b = e.target.closest('.opt'); if (b && !box.classList.contains('locked')) choose(+b.dataset.i); });
     return {
@@ -860,11 +905,14 @@ function finishLesson() {
   save();
   const u1done = doneCount(UNITS[0]) === UNITS[0].lessons.length;
   const upsell = !S.premium && cfg.lessonId && u1done && cfg.unit === 'u1';
+  const gain = cfg.topicId ? topicStats(TOPIC(cfg.topicId)).done - cfg.before : 0;
+  const gainHtml = cfg.topicId ? `<div class="streak-card topic-gain">🏅 <div><b>${gain > 0 ? '+' + gain + ' kemampuan baru' : 'Terus berlatih'} di ${esc(TOPIC(cfg.topicId).name)}</b><small>${topicStats(TOPIC(cfg.topicId)).done} dari ${topicStats(TOPIC(cfg.topicId)).total} kemampuan dikuasai (baca, arti, eja, tulis).</small></div></div>` : '';
   sfx.win();
   openLayer1(`<div class="result">
     <div class="res-top">${mascot('cheer', 120)}<h1>${cfg.lessonId ? 'Pelajaran selesai!' : 'Latihan selesai!'}</h1><p>${esc(cfg.title)}</p></div>
     <div class="res-stats"><div class="stat orange"><small>XP didapat</small><b>+${total}</b></div><div class="stat blue"><small>Akurasi</small><b>${acc}%</b></div><div class="stat green"><small>Waktu</small><b>${Math.floor(secs / 60)}:${pad(secs % 60)}</b></div></div>
     <div class="streak-card">🔥 <div><b>Streak ${streak()} hari</b><small>${LS.maxCombo >= 3 ? `Beruntun terbaik di sesi ini: ${LS.maxCombo} jawaban benar.` : 'Belajar lagi besok untuk menambah streak.'}</small></div></div>
+    ${gainHtml}
     ${LS.wrong.length ? `<div class="card"><h3>Perlu diulang</h3><div class="wchips">${LS.wrong.map(w => `<span class="wchip ghost">${esc(w.key || w.word || w.text || w.say || 'Pasangkan kata')}</span>`).join('')}</div><p class="muted small">Disimpan ke jadwal pengulangan.</p></div>` : ''}
     ${upsell ? `<button class="upsell" data-act="paywall"><span>⭐</span><div><b>Unit 1 selesai! Buka Unit 2 dan 3</b><small>Dengan Premium mulai Rp25.000 per bulan</small></div></button>` : ''}
     <footer class="res-foot"><button class="btn btn-primary btn-block" data-act="home">Lanjut</button></footer>
@@ -894,11 +942,214 @@ function startPractice(k) {
 }
 
 /* =====================================================================
+   Topik dasar: tau baca, tau arti, tau eja, tau tulis
+   ===================================================================== */
+const mOf = (tp, it) => S.mastery[tp.id + '|' + it.en] || {};
+function markMastery(m) {
+  const k = m.topic + '|' + m.en;
+  S.mastery[k] = Object.assign(S.mastery[k] || {}, { [m.sk]: 1 });
+  save();
+}
+function topicStats(tp) {
+  const by = { b: 0, a: 0, e: 0, t: 0 };
+  let done = 0;
+  tp.items.forEach(it => { const m = mOf(tp, it); MS.forEach(k => { if (m[k]) { done++; by[k]++; } }); });
+  return { done, total: tp.items.length * 4, by };
+}
+function topicEx(tp, it, sk) {
+  const m = { topic: tp.id, en: it.en, sk };
+  const rest = shuffle(tp.items.filter(x => x !== it));
+  const mix = (own, f) => { const o = shuffle([own, ...rest.slice(0, 3).map(f)]); return { opts: o, ans: o.indexOf(own) }; };
+  if (tp.id === 'abc') {
+    if (sk === 'b') return Object.assign({ t: 'choose', q: 'Huruf ini dibaca apa?', word: it.en, say: it.en, why: `Huruf ${it.en} dibaca "${it.rd}".`, key: it.en, m }, mix(it.rd, x => x.rd));
+    if (sk === 'a') return Object.assign({ t: 'choose', q: `Huruf ${it.en} untuk kata apa?`, word: it.en, say: it.en, why: `${it.en} untuk ${it.w}.`, key: it.w, m }, mix(`${it.e} ${it.w}`, x => `${x.e} ${x.w}`));
+    if (sk === 'e') return Object.assign({ t: 'choose', q: 'Dengarkan, lalu pilih huruf yang kamu dengar', word: '?', say: it.en, auto: true, big: true, why: `Itu huruf ${it.en}, dibaca "${it.rd}".`, key: it.en, m }, mix(it.en, x => x.en));
+    return { t: 'write', q: 'Tulis huruf ini dengan tulisan tangan', word: it.en + it.en.toLowerCase(), hint: `huruf ${it.en}`, say: it.en, key: it.en, m };
+  }
+  if (sk === 'b') {
+    return tp.pic
+      ? Object.assign({ t: 'choose', q: 'Pilih gambar yang cocok dengan kata ini', word: it.en, say: it.en, big: true, why: `${it.en} = ${it.id}.`, key: it.en, m }, mix(it.e, x => x.e))
+      : Object.assign({ t: 'choose', q: 'Dengarkan, lalu pilih kata yang benar', word: '?', say: it.en, auto: true, why: `Kata itu dibaca "${it.en}", artinya ${it.id}.`, key: it.en, m }, mix(it.en, x => x.en));
+  }
+  if (sk === 'a') return Object.assign({ t: 'choose', q: 'Pilih arti yang tepat', word: it.en, say: it.en, why: `${it.en} = ${it.id}.`, key: it.en, m }, mix(it.id, x => x.id));
+  if (sk === 'e') return { t: 'spell', q: 'Dengarkan, lalu eja kata ini', say: it.en, ans: it.en.toLowerCase(), hint: it.id, why: `Dieja ${it.en.toUpperCase().split('').join('-')}.`, key: it.en, m };
+  return { t: 'write', q: 'Tulis kata ini dengan tulisan tangan', word: it.en, hint: it.id, say: it.en, key: it.en, m };
+}
+function startTopic(id) {
+  const tp = TOPIC(id);
+  const left = tp.items.filter(it => MS.some(k => !mOf(tp, it)[k]));
+  const items = (left.length >= 3 ? left : shuffle(tp.items)).slice(0, 3);
+  openLesson({ title: tp.name, ex: items.flatMap(it => MS.map(k => topicEx(tp, it, k))), color: tp.color, topicId: tp.id, before: topicStats(tp).done });
+}
+function openTopic(id) {
+  const tp = TOPIC(id), st = topicStats(tp), pct = Math.round(st.done / st.total * 100);
+  const n = tp.items.length;
+  openLayer1(`<div class="topic" style="--c:${tp.color}" role="dialog" aria-label="${esc(tp.name)}">
+    <header class="l-top"><button class="icon-btn" data-act="closeTopic" aria-label="Tutup">${ICON.close}</button><div class="bar" role="progressbar" aria-label="Kemajuan topik"><i style="width:${pct}%"></i></div></header>
+    <div class="t-body">
+      <div class="t-head"><span class="t-ico">${tp.icon}</span><div><h1>${esc(tp.name)}</h1><p class="muted">${esc(tp.sub)} · ${pct}% dikuasai</p></div></div>
+      <div class="skills4">${MS.map(k => `<div class="sk"><span>${MS_INFO[k][0]}</span><b>${MS_INFO[k][1]}</b><small>${st.by[k]}/${n}</small></div>`).join('')}</div>
+      <ul class="words">${tp.items.map(it => { const m = mOf(tp, it); return `<li><button class="w-row" data-say="${esc(it.en)}" aria-label="Dengarkan ${esc(it.en)}"><span class="w-ico">${tp.id === 'abc' ? esc(it.en + it.en.toLowerCase()) : it.e}</span><div><b>${tp.id === 'abc' ? esc(it.en) : esc(it.en)}</b><small>${esc(tp.id === 'abc' ? it.id + ' ' + it.e : it.id)}</small></div><span class="d4" title="Baca, arti, eja, tulis">${MS.map(k => `<i class="${m[k] ? 'on' : ''}">${MS_INFO[k][1].slice(4, 5).toUpperCase()}</i>`).join('')}</span></button></li>`; }).join('')}</ul>
+    </div>
+    <footer class="l-foot"><button class="btn btn-primary btn-block" data-act="topic-go" data-id="${tp.id}">${st.done ? 'Lanjut latihan' : 'Mulai latihan'}</button></footer>
+  </div>`);
+}
+function homeExtras() {
+  const st = setorStreak(), done = setedToday();
+  let h = `<button class="setor-card${done ? ' done' : ''}" data-act="tab" data-tab="hafalan"><span class="sc-ico">${done ? '✅' : '🎙️'}</span><div><b>${done ? 'Hafalan hari ini sudah disetor' : 'Setor hafalan hari ini'}</b><small>${done ? `Mantap! ${st} hari beruntun.` : `Streak setor ${st} hari. Jangan sampai putus ya.`}</small></div><span class="sc-go">›</span></button>`;
+  h += `<h3 class="sec">Mulai dari dasar</h3><p class="muted small sec-sub">Kenali kata, artinya, ejaannya, dan cara menulisnya.</p><section class="topics">${TOPICS.map(tp => {
+    const s = topicStats(tp), pct = Math.round(s.done / s.total * 100);
+    return `<button class="topic-card" style="--c:${tp.color}" data-act="topic" data-id="${tp.id}"><span class="tc-ico">${tp.icon}</span><b>${esc(tp.name)}</b><small>${esc(tp.sub)}</small><div class="tc-bar"><i style="width:${pct}%"></i></div><em>${pct}%</em></button>`;
+  }).join('')}</section><h3 class="sec">Jalur percakapan</h3>`;
+  return h;
+}
+
+/* =====================================================================
+   Setor hafalan harian
+   ===================================================================== */
+const DOW = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'], MON = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+const fmtDate = s => { const [y, m, d] = s.split('-').map(Number); return `${DOW[new Date(y, m - 1, d).getDay()]}, ${d} ${MON[m - 1]}`; };
+const setorDays = () => new Set(S.setor.map(x => x.d));
+const setedToday = () => S.setor.some(x => x.d === todayStr());
+function setorStreak() {
+  const set = setorDays();
+  let d = new Date(), n = 0;
+  if (!set.has(ymd(d))) d = addDays(d, -1);
+  while (set.has(ymd(d))) { n++; d = addDays(d, -1); }
+  return n;
+}
+const dailyQuote = () => QUOTES[Math.floor(Date.now() / 86400000) % QUOTES.length];
+function viewSetor() {
+  const st = setorStreak(), done = setedToday(), set = setorDays();
+  const week = [];
+  for (let i = 6; i >= 0; i--) { const d = addDays(new Date(), -i); week.push({ l: ['M', 'S', 'S', 'R', 'K', 'J', 'S'][d.getDay()], on: set.has(ymd(d)), today: i === 0 }); }
+  const words = S.setor.reduce((a, x) => a + x.got, 0);
+  const tg = [[3, '🌱', '3 hari'], [7, '🔥', '7 hari'], [14, '🏅', '14 hari'], [30, '👑', '30 hari']];
+  let h = topbar('Setor Hafalan');
+  h += `<section class="s-hero card${done ? ' done' : ''}">${mascot(done ? 'cheer' : 'happy', 72)}<div><h2>${done ? 'Hafalan hari ini sudah disetor' : 'Belum setor hari ini'}</h2><p class="quote">“${esc(dailyQuote())}”</p></div></section>
+  <button class="btn btn-accent btn-block" data-act="setor-open">${done ? 'Setor hafalan lagi' : 'Setor hafalan sekarang'}</button>
+  <section class="stats3"><div class="stat"><small>Setoran</small><b>${S.setor.length}</b></div><div class="stat"><small>Beruntun</small><b>🔥 ${st}</b></div><div class="stat"><small>Kata benar</small><b>${words}</b></div></section>
+  <section class="card"><h3>7 hari terakhir</h3><div class="week">${week.map(d => `<div class="day${d.on ? ' on' : ''}${d.today ? ' today' : ''}"><span>${d.l}</span><i>${d.on ? '🎙️' : ''}</i></div>`).join('')}</div></section>
+  <h3 class="sec">Tonggak setor beruntun</h3><section class="tonggak">${tg.map(([n, ic, lb]) => `<div class="tg${st >= n ? ' on' : ''}"><span>${st >= n ? ic : '🔒'}</span><b>${lb}</b></div>`).join('')}</section>
+  <h3 class="sec">Riwayat setoran</h3><ul class="hist">${S.setor.slice().reverse().slice(0, 8).map(x => {
+    const tp = TOPIC(x.topic) || TOPICS[0], r = x.got / x.total, cls = r >= 0.8 ? '' : r >= 0.5 ? 'mid' : 'low';
+    const txt = x.text.length > 70 ? x.text.slice(0, 70) + '…' : x.text;
+    return `<li class="h-row"><span class="h-ico">${tp.icon}</span><div><b>${esc(tp.name)}</b><small>${fmtDate(x.d)} · ${x.via === 'suara' ? '🎙️ Suara' : '⌨️ Ketik'}</small><p class="h-text">“${esc(txt)}”</p></div><div class="h-right"><span class="h-score ${cls}">${x.got}/${x.total}</span><button class="icon-btn mini" data-say="${esc(x.text)}" aria-label="Putar ulang hafalan">${ICON.speaker}</button></div></li>`;
+  }).join('')}</ul><div class="spacer"></div>`;
+  return h;
+}
+let SF = { id: 'abc', via: 'ketik', done: false };
+function openSetor() {
+  openLayer1(`<div class="setor" role="dialog" aria-label="Setor hafalan">
+    <header class="l-top"><button class="icon-btn" data-act="closeTopic" aria-label="Tutup">${ICON.close}</button><h2 class="l-title">Setor hafalan</h2></header>
+    <div class="t-body"><p class="muted">Apa yang mau kamu setor hari ini? Ucapkan atau tulis dari ingatan, tanpa melihat catatan.</p>
+    <div class="pick-list">${TOPICS.map(tp => `<button class="pick" data-act="setor-topic" data-id="${tp.id}"><span>${tp.icon}</span><div><b>${esc(tp.name)}</b><small>${esc(tp.sub)}</small></div><i>›</i></button>`).join('')}</div></div></div>`);
+}
+function setorForm(id) {
+  const tp = TOPIC(id);
+  SF = { id, via: 'ketik', done: false };
+  openLayer1(`<div class="setor" role="dialog" aria-label="Setor ${esc(tp.name)}">
+    <header class="l-top"><button class="icon-btn" data-act="setor-back" aria-label="Kembali">${ICON.close}</button><h2 class="l-title">${tp.icon} ${esc(tp.name)}</h2></header>
+    <div class="t-body"><p class="s-q">${esc(tp.setorQ)}</p>
+      <textarea id="sfText" rows="5" placeholder="Tulis hafalanmu di sini, atau tekan Ucapkan lalu bicara..." aria-label="Hafalanmu" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+      <div class="s-tools"><button class="btn btn-ghost mic-btn" data-act="setor-mic" type="button">${ICON.mic}<span>Ucapkan</span></button><button class="btn btn-ghost" data-act="setor-hint" type="button">Petunjuk</button></div>
+      <div id="sfHint" class="hint-box" hidden></div></div>
+    <footer class="l-foot"><button class="btn btn-primary btn-block" id="sfGo" data-act="setor-submit" disabled>Setor sekarang</button></footer></div>`);
+  const ta = $('#sfText');
+  ta.addEventListener('input', () => { $('#sfGo').disabled = ta.value.trim().length < 1; });
+  setTimeout(() => { try { ta.focus(); } catch (e) { /* abaikan */ } }, 80);
+}
+function setorHint() {
+  const tp = TOPIC(SF.id), box = $('#sfHint');
+  if (!box) return;
+  box.hidden = false;
+  box.innerHTML = tp.id === 'abc' ? 'Mulai dari: A · B · C · D ...' : tp.items.map(it => `<span>${esc(it.en[0] + '•'.repeat(it.en.length - 1))}</span>`).join('');
+}
+function setorMic(btn) {
+  const ta = $('#sfText'), tp = TOPIC(SF.id);
+  if (!ta) return;
+  const add = t => { ta.value = (ta.value ? ta.value + ' ' : '') + t; SF.via = 'suara'; ta.dispatchEvent(new Event('input')); };
+  const simulate = () => { toast('Mikrofon tidak tersedia, memakai contoh suara.'); add(tp.items.slice(0, Math.max(1, tp.items.length - 2)).map(x => x.en.toLowerCase()).join(' ')); };
+  btn.classList.add('on');
+  toast('Mendengarkan... ucapkan hafalanmu dalam bahasa Inggris');
+  listen({
+    onResult: add,
+    onError: err => { if (err === 'no-speech') toast('Tidak terdengar. Coba lagi.'); else if (err !== 'aborted') simulate(); },
+    onEnd: () => btn.classList.remove('on')
+  });
+}
+function evalSetor(tp, text) {
+  let items;
+  if (tp.id === 'abc') {
+    const set = new Set();
+    text.toLowerCase().split(/[^a-z]+/).filter(Boolean).forEach(t => {
+      if (t.length === 1) set.add(t);
+      else if (t.length >= 3 && 'abcdefghijklmnopqrstuvwxyz'.includes(t)) t.split('').forEach(c => set.add(c));
+    });
+    items = tp.items.map(it => ({ en: it.en, ok: set.has(it.en.toLowerCase()) }));
+  } else {
+    const tokens = norm(text).split(' ').filter(Boolean);
+    items = tp.items.map(it => { const w = it.en.toLowerCase(); return { en: it.en, ok: tokens.some(t => t === w || (w.length >= 5 && lev(t, w) <= 1)) }; });
+  }
+  return { items, got: items.filter(x => x.ok).length, total: items.length };
+}
+function setorSubmit() {
+  const tp = TOPIC(SF.id), ta = $('#sfText');
+  if (!ta || SF.done) return;
+  const text = ta.value.trim();
+  if (!text) return;
+  SF.done = true;
+  const r = evalSetor(tp, text), first = !setedToday();
+  S.setor.push({ d: todayStr(), topic: tp.id, got: r.got, total: r.total, text, via: SF.via });
+  S.setor = S.setor.slice(-60);
+  if (first) { S.xp += 15; S.todayXp += 15; }
+  if (!S.days.includes(todayStr())) S.days.push(todayStr());
+  save(); sfx.win();
+  const pct = Math.round(r.got / r.total * 100);
+  const msg = pct >= 80 ? 'Luar biasa! Hafalanmu kuat.' : pct >= 50 ? 'Bagus! Sedikit lagi.' : 'Tidak apa-apa. Setor tiap hari, hafalanmu pasti makin kuat.';
+  openLayer1(`<div class="setor" role="dialog" aria-label="Hasil setoran">
+    <div class="t-body center">${mascot(pct >= 50 ? 'cheer' : 'happy', 110)}<h1>Setoran tersimpan</h1><p class="muted">${esc(tp.name)} · ${r.got} dari ${r.total} benar</p>
+      <div class="score ${pct >= 50 ? 'good' : 'bad'}"><div class="meter"><i style="width:${pct}%"></i></div><b>${pct}/100</b></div>
+      <p class="s-msg">${msg}</p>
+      <div class="wchips c">${r.items.map(x => `<button class="wchip ${x.ok ? 'ok' : 'miss'}" data-say="${esc(x.en)}">${esc(x.en)}</button>`).join('')}</div>
+      <p class="muted small">Kata berwarna merah belum disebut. Ketuk untuk mendengarnya.</p>
+      <div class="streak-card">🔥 <div><b>${setorStreak()} hari beruntun setor</b><small>${first ? '+15 XP untuk setoran pertama hari ini.' : 'Setoran tambahan tersimpan di riwayat.'}</small></div></div></div>
+    <footer class="res-foot"><button class="btn btn-primary btn-block" data-act="setor-done">Selesai</button><button class="link" data-act="setor-again">Setor topik lain</button></footer></div>`);
+  if (pct >= 50) confetti(70);
+}
+function showDaily() {
+  const st = setorStreak(), h = new Date().getHours();
+  const hi = h < 11 ? 'Selamat pagi' : h < 15 ? 'Selamat siang' : h < 18 ? 'Selamat sore' : 'Selamat malam';
+  S.greet = todayStr(); save();
+  openModal(`<div class="sheet daily center" role="dialog" aria-modal="true" aria-label="Motivasi harian">${mascot('cheer', 96)}<h2>${hi}!</h2>
+    <div class="d-streak">🔥 <b>${st}</b> hari beruntun setor</div>
+    <p class="quote">“${esc(dailyQuote())}”</p>
+    <button class="btn btn-accent btn-block" data-act="daily-go">Setor hafalan hari ini</button>
+    <button class="link" data-act="closeModal">Nanti saja</button></div>`);
+}
+
+/* =====================================================================
+   Iklan (simulasi) dan iklan berhadiah
+   ===================================================================== */
+const adBanner = () => S.premium ? '' : `<aside class="ad" aria-label="Iklan contoh"><span class="ad-tag">Iklan · contoh</span><div class="ad-body"><span class="ad-ico">📚</span><div><b>Toko Buku Pintar</b><small>Diskon 20% kamus dan buku latihan</small></div><button class="btn btn-ghost mini" data-act="ad-info">Lihat</button></div><button class="link tiny" data-act="paywall">Hapus iklan dengan Premium</button></aside>`;
+function rewardAd(uid, i) {
+  let n = 5;
+  openModal(`<div class="sheet ad-full center" role="dialog" aria-modal="true" aria-label="Iklan berhadiah"><span class="ad-tag">Iklan · contoh</span><div class="ad-vid"><span>📚</span><b>Toko Buku Pintar</b><small>Diskon 20% kamus dan buku latihan</small></div><p id="adCount" class="muted">Hadiah dalam ${n} detik</p><button class="btn btn-accent btn-block" id="adClaim" data-act="ad-claim" data-u="${uid}" data-i="${i}" disabled>Tunggu...</button></div>`);
+  const t = setInterval(() => {
+    const c = $('#adCount');
+    if (!c) { clearInterval(t); return; }
+    n--;
+    if (n > 0) c.textContent = `Hadiah dalam ${n} detik`;
+    else { clearInterval(t); c.textContent = 'Terima kasih sudah menonton!'; const b = $('#adClaim'); if (b) { b.disabled = false; b.textContent = 'Buka pelajaran'; } }
+  }, reduceMotion ? 200 : 1000);
+}
+
+/* =====================================================================
    Pembayaran / langganan (simulasi)
    ===================================================================== */
 const PLANS = { yearly: { name: 'Tahunan', price: 299000, per: 'tahun', note: 'Setara sekitar Rp25.000 per bulan', badge: 'Hemat 36%' }, monthly: { name: 'Bulanan', price: 39000, per: 'bulan', note: 'Batal kapan saja', badge: '' } };
 const METHODS = ['GoPay', 'DANA', 'OVO', 'ShopeePay', 'Transfer bank (Virtual Account)', 'Pulsa operator', 'Kartu debit atau kredit'];
-function openPaywall(reason) {
+function openPaywall(reason, ctx) {
   const head = reason === 'unit' ? 'Unit ini khusus Premium' : 'Belajar tanpa batas dengan Premium';
   openModal(`<div class="sheet paywall" role="dialog" aria-modal="true" aria-label="Premium">
     <button class="icon-btn close" data-act="closeModal" aria-label="Tutup">${ICON.close}</button>
@@ -906,6 +1157,7 @@ function openPaywall(reason) {
     <ul class="benefits"><li>Semua unit dan pelajaran terbuka</li><li>Latihan bicara dan tulis tangan dengan penilaian (Fase 2)</li><li>Tutor AI untuk tanya jawab dan percakapan (Fase 2-3)</li><li>Pengulangan cerdas tanpa batas</li></ul>
     <div class="plans">${Object.entries(PLANS).map(([k, p]) => `<label class="plan${S.plan === k ? ' sel' : ''}"><input type="radio" name="plan" value="${k}" ${S.plan === k ? 'checked' : ''}><div><b>${p.name}</b><small>${p.note}</small></div><div class="pr"><b>${rupiah(p.price)}</b><small>per ${p.per}</small></div>${p.badge ? `<span class="ribbon">${p.badge}</span>` : ''}</label>`).join('')}</div>
     <button class="btn btn-accent btn-block" data-act="pw-next">Lanjut ke pembayaran</button>
+    ${ctx ? `<button class="btn btn-ghost btn-block" data-act="reward-ad" data-u="${ctx.u}" data-i="${ctx.i}">▶ Tonton iklan 5 detik, coba pelajaran ini gratis</button>` : ''}
     <p class="muted small center">Harga hanya contoh untuk prototype.</p></div>`);
 }
 function paywallMethods() {
@@ -970,7 +1222,7 @@ const A = {
   tab(b) { goTab(b.dataset.tab); },
   lesson(b) {
     const u = UNITS.find(x => x.id === b.dataset.u), i = +b.dataset.i, l = u.lessons[i], st = lessonState(u, i);
-    if (st === 'prem') { openPaywall('unit'); return; }
+    if (st === 'prem') { openPaywall('unit', { u: u.id, i }); return; }
     if (st === 'locked') { toast('Selesaikan pelajaran sebelumnya dulu ya.'); return; }
     if (!l.ex.length) { toast('Materi ini belum dibuat di prototype.'); return; }
     openLesson({ title: l.title, ex: l.ex, lessonId: l.id, unit: u.id, color: u.color });
@@ -1018,6 +1270,27 @@ const A = {
     const open = acc.classList.toggle('open');
     b.setAttribute('aria-expanded', open ? 'true' : 'false');
     b.querySelector('.chev').textContent = open ? '-' : '+';
+  },
+  topic(b) { openTopic(b.dataset.id); },
+  closeTopic() { closeLayer1(); },
+  'topic-go'(b) { startTopic(b.dataset.id); },
+  rank() { goTab('rank'); },
+  'setor-open'() { openSetor(); },
+  'setor-topic'(b) { setorForm(b.dataset.id); },
+  'setor-back'() { openSetor(); },
+  'setor-again'() { openSetor(); },
+  'setor-done'() { closeLayer1(); goTab('hafalan'); },
+  'setor-mic'(b) { setorMic(b); },
+  'setor-hint'() { setorHint(); },
+  'setor-submit'() { setorSubmit(); },
+  'daily-go'() { closeModal(); goTab('hafalan'); },
+  'ad-info'() { toast('Ini contoh tampilan iklan. Di aplikasi nyata, iklan datang dari jaringan seperti AdMob.'); },
+  'reward-ad'(b) { rewardAd(b.dataset.u, +b.dataset.i); },
+  'ad-claim'(b) {
+    const u = UNITS.find(x => x.id === b.dataset.u), l = u.lessons[+b.dataset.i];
+    closeModal();
+    if (!l.ex.length) { toast('Materi ini belum dibuat di prototype.'); return; }
+    openLesson({ title: l.title, ex: l.ex, lessonId: l.id, unit: u.id, color: u.color });
   },
   chip(b) { tutorChip(b.dataset.k); },
   voice() { voiceNote(); },
@@ -1076,12 +1349,16 @@ function jump(name) {
   if (VIEWS[name]) { goTab(name); return; }
   if (name === 'lesson') { const u = UNITS[0], l = u.lessons[0]; openLesson({ title: l.title, ex: l.ex, lessonId: l.id, unit: u.id, color: u.color }); return; }
   if (name.startsWith('ex-')) demoLesson(name.slice(3));
+  if (name.startsWith('topic-')) openTopic(name.slice(6));
+  if (name === 'setor') openSetor();
+  if (name === 'daily') showDaily();
 }
 
 function boot() {
   renderNav();
   renderView();
   if (!S.onboarded) startOnboarding();
+  else if (!setedToday()) setTimeout(() => { if (!L1().classList.contains('on') && !L2().classList.contains('on')) showDaily(); }, 700);
 }
 /* =====================================================================
    Mode aplikasi: layar penuh, pasang ke HP, dan pembatasan salin/zoom
@@ -1130,7 +1407,7 @@ function boot() {
     if (document.getElementById('iosHint')) return;
     const d = document.createElement('div');
     d.id = 'iosHint';
-    d.innerHTML = '<div class="ios-card" role="dialog" aria-label="Pasang aplikasi"><b>Pasang aplikasi Elingua</b><p>Ketuk tombol <b>Bagikan</b> di Safari, lalu pilih <b>Tambahkan ke Layar Utama</b>.</p><button class="btn btn-primary btn-block" type="button">Mengerti</button></div>';
+    d.innerHTML = '<div class="ios-card" role="dialog" aria-label="Pasang aplikasi"><b>Pasang aplikasi Mr. English</b><p>Ketuk tombol <b>Bagikan</b> di Safari, lalu pilih <b>Tambahkan ke Layar Utama</b>.</p><button class="btn btn-primary btn-block" type="button">Mengerti</button></div>';
     d.querySelector('button').addEventListener('click', () => d.remove());
     document.body.appendChild(d);
   }
@@ -1154,8 +1431,8 @@ function boot() {
         } catch (e) { /* coba lagi pada ketukan berikutnya */ }
       }
     }
-    if (ios && !installDone && !sessionStorage.getItem('elingua-ios-hint')) {
-      try { sessionStorage.setItem('elingua-ios-hint', '1'); } catch (e) { /* abaikan */ }
+    if (ios && !installDone && !sessionStorage.getItem('mrenglish-ios-hint')) {
+      try { sessionStorage.setItem('mrenglish-ios-hint', '1'); } catch (e) { /* abaikan */ }
       iosHint();
     }
     if (fsOk && (installDone || installAsked || !('onbeforeinstallprompt' in window))) {
@@ -1167,5 +1444,5 @@ function boot() {
 
 boot();
 
-window.Elingua = { state: () => S, jump, test: { TYPES, LS, doCheck, nextEx, S: () => S, UNITS, openLesson } };
+window.MrEnglish = { state: () => S, jump, test: { TYPES, LS, doCheck, nextEx, S: () => S, UNITS, openLesson } };
 })();
