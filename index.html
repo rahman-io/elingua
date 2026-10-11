@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#F3F5FC">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Elingua">
+  <meta name="description" content="Prototype interaktif aplikasi Android untuk belajar bahasa Inggris bagi orang Indonesia.">
+  <title>Elingua - Belajar Inggris</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="stage">
+    <div class="app" id="app">
+      <div id="view" class="view" tabindex="-1"></div>
+      <nav id="nav" class="nav" aria-label="Navigasi utama"></nav>
+      <div id="layer1" class="layer l1"></div>
+      <div id="layer2" class="layer l2"></div>
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+  <noscript>Aplikasi ini membutuhkan JavaScript.</noscript>
+  <script src="script.js"></script>
+</body>
+</html>

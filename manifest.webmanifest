@@ -1,0 +1,19 @@
+{
+  "name": "Elingua - Belajar Inggris",
+  "short_name": "Elingua",
+  "description": "Belajar bahasa Inggris untuk orang Indonesia: baca, tulis, eja, dengar, dan bicara.",
+  "lang": "id",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "portrait",
+  "background_color": "#F3F5FC",
+  "theme_color": "#F3F5FC",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
